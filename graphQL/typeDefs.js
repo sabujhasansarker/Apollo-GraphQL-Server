@@ -16,6 +16,9 @@ module.exports = gql`
     username: String!
     date: String!
     user: User!
+    likes: [User]
+    likeCount: Int!
+    commentCount: Int!
   }
 
   # Input data
@@ -43,5 +46,6 @@ module.exports = gql`
     createPost(body: String!): Post!
     updatePost(postId: ID!, body: String!): Post!
     deletePost(postId: ID!): String!
+    like(postId: ID!): Post!
   }
 `;

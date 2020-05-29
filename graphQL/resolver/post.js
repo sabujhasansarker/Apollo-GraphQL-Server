@@ -6,6 +6,7 @@ const auth = require("../../utils/auth");
 
 // * Populete
 const { allPosts, singlePost } = require("../../utils/populeted");
+
 // * Validation
 const { UserInputError, AuthenticationError } = require("apollo-server");
 
@@ -61,16 +62,21 @@ module.exports = {
       }
     },
     async deletePost(_, { postId }, context) {
+      let user = auth(context);
       try {
         const post = await Post.findById(postId);
 
+        // if post not found
         if (!post) {
           throw new UserInputError("post", { errors: "Post dose not found" });
         }
-        let user = auth(context);
+
+        // user chack
         if (user.username === post.username) {
+          // delete post
           await Post.findByIdAndRemove(postId);
 
+          // update user
           user = await User.findByIdAndUpdate(
             user.id,
             { $pull: { posts: postId } },
@@ -81,7 +87,7 @@ module.exports = {
           throw new AuthenticationError("Action not allowed");
         }
       } catch (err) {
-        throw new Error(err);
+        throw new UserInputError("post", { errors: "Post dose not found" });
       }
     },
   },

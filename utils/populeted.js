@@ -16,16 +16,18 @@ exports.allPosts = () => {
 };
 
 exports.singlePost = (postId) => {
-  return Post.findById(postId).populate({
-    path: "user",
-    select: ["username", "email", "id", "posts", "date"],
-    model: "User",
-    populate: [
-      {
-        path: "posts",
-        select: ["body", "id", "date", "username"],
-        model: "Post",
-      },
-    ],
-  });
+  return Post.findById(postId)
+    .populate({
+      path: "user",
+      select: ["username", "email", "id", "posts", "date"],
+      model: "User",
+      populate: [
+        {
+          path: "posts",
+          select: ["body", "id", "date", "username"],
+          model: "Post",
+        },
+      ],
+    })
+    .populate("likes");
 };

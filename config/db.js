@@ -6,6 +6,7 @@ module.exports = () => {
     mongoose.connect(config.get("mongoUri"), {
       useUnifiedTopology: true,
       useNewUrlParser: true,
+      useFindAndModify: false,
     });
     console.log("mogodb connected");
   } catch (err) {
