@@ -8,7 +8,7 @@ module.exports = gql`
     email: String!
     token: String!
     date: String!
-    posts: [Post!]
+    posts: [Post]
   }
   type Post {
     id: ID!
@@ -18,9 +18,15 @@ module.exports = gql`
     user: User!
     likes: [User]
     likeCount: Int!
+    comments: [Comment]
     commentCount: Int!
   }
-
+  type Comment {
+    id: ID!
+    date: String!
+    user: User
+    body: String!
+  }
   # Input data
   input RegisterInput {
     username: String!
@@ -47,5 +53,6 @@ module.exports = gql`
     updatePost(postId: ID!, body: String!): Post!
     deletePost(postId: ID!): String!
     like(postId: ID!): Post!
+    comment(postId: ID!, body: String!): Post!
   }
 `;

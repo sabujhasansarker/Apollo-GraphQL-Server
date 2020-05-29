@@ -1,5 +1,5 @@
 // * validation
-const { UserInputError } = require("apollo-server");
+const { UserInputError, AuthenticationError } = require("apollo-server");
 
 // * model
 const Post = require("../../models/Post");
@@ -8,7 +8,7 @@ const Post = require("../../models/Post");
 const auth = require("../../utils/auth");
 
 // * Populete
-const { allPosts, singlePost } = require("../../utils/populeted");
+const { singlePost } = require("../../utils/populeted");
 
 module.exports = {
   Mutation: {
@@ -33,6 +33,23 @@ module.exports = {
             );
             return singlePost(postId);
           }
+        }
+      } catch (err) {
+        throw new UserInputError("post", { errors: "Post dose not found" });
+      }
+    },
+    async comment(_, { postId, body }, context) {
+      let user = auth(context);
+      try {
+        let post = await Post.findById(postId);
+        if (post) {
+          post.comments.unshift({
+            body,
+            user: user.id,
+            date: new Date().toISOString(),
+          });
+          await post.save();
+          return singlePost(postId);
         }
       } catch (err) {
         throw new UserInputError("post", { errors: "Post dose not found" });

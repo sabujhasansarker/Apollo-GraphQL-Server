@@ -84,7 +84,7 @@ module.exports = {
           );
           return "Post deleted";
         } else {
-          throw new AuthenticationError("Action not allowed");
+          return new Error("Action not allowed");
         }
       } catch (err) {
         throw new UserInputError("post", { errors: "Post dose not found" });
@@ -92,7 +92,7 @@ module.exports = {
     },
   },
   Query: {
-    getPosts() {
+    async getPosts() {
       return allPosts();
     },
     async getPost(_, { postId }) {

@@ -12,7 +12,7 @@ const postSchema = Schema({
   comments: [
     {
       body: String,
-      username: String,
+      user: { type: Schema.Types.ObjectId, ref: "User" },
       date: String,
     },
   ],
