@@ -54,5 +54,6 @@ module.exports = gql`
     deletePost(postId: ID!): String!
     like(postId: ID!): Post!
     comment(postId: ID!, body: String!): Post!
+    deleteComment(postId: ID!, commentId: ID!): Post!
   }
 `;

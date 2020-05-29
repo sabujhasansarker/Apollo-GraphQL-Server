@@ -55,5 +55,33 @@ module.exports = {
         throw new UserInputError("post", { errors: "Post dose not found" });
       }
     },
+    async deleteComment(_, { postId, commentId }, context) {
+      let user = auth(context);
+      try {
+        let post = await Post.findById(postId);
+        if (post) {
+          if (post.comments.find((comment) => comment._id == commentId)) {
+            if (
+              post.comments.filter(
+                (comment) => comment.username == user.username
+              )
+            ) {
+              await Post.findByIdAndUpdate(
+                postId,
+                { $pull: { comments: { _id: commentId } } },
+                { new: true }
+              );
+              return singlePost(postId);
+            } else {
+              return new Error("Action not allowed");
+            }
+          } else {
+            return new Error("Comment dose not found");
+          }
+        }
+      } catch (err) {
+        throw new UserInputError("post", { errors: "Post dose not found" });
+      }
+    },
   },
 };
